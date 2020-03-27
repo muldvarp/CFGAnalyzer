@@ -1,0 +1,25 @@
+#0:
+length is not shown correctly
+cfganalyzer -v 3 -a ./../benchmarks/ambiguous/46.cfg
+*** ML: easy fix, Sophie could have done that ***
+
+#1:
+grammars with different alphabets don't work in intersection mode
+*** ML: already fixed? can anybody confirm that the bug still exists? ***
+
+
+#2:
+results of cfganalyzer -v 1 -i ../benchmarks/ambiguous/29.cfg ../benchmarks/simple_tests/test5.cfg
+and        cfganalyzer -v 1 -n ../benchmarks/ambiguous/29.cfg ../benchmarks/simple_tests/test5.cfg
+are contradictory
+*** ML: seemed to be a consequence of #3 below, thus is fixed ***
+
+#3:
+nonterminals need to be renamed if more than one grammars is being examined
+better: rename variables in the encoding
+*** ML: fixed ***
+
+#4:
+there seems to be no latex output when run in intersection mode
+cfganalyzer -v 1 -n ../benchmarks/ambiguity/29.cfg ../benchmarks/simple_tests/test5.cfg -o parse.tex
+

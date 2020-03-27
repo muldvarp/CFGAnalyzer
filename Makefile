@@ -1,91 +1,41 @@
-ifeq ($(strip $(wildcard Config)),)
-        include Config.default
-else
-        include Config
-endif
+#OCAMLBUILD=ocamlbuild -verbose 3
+OCAMLBUILD=ocamlbuild
+OPTIONS=-use-ocamlfind
+PACKAGES=-pkgs ocaml-sat-solvers
+SRC=src
+MAIN=main
+#INCLUDES=-I $(SRC) -I ocaml-sat-solvers/_build/src -I ocaml-sat-solvers/_build/src/internalsat -I ocaml-satsolvers/_build/src/minisat
+INCLUDES=-I $(SRC)
+#LIBS=-lib unix
+LIBS=
+PARAMS=$(INCLUDES) $(LIBS) $(PACKAGES)
+#SED=sed
 
-OBJDIR=obj
-SRCDIR=src
-BINDIR=bin
-SATSOLVERSOBJ=$(SATSOLVERSROOT)/obj
-
-INCLUDES=-I $(SRCDIR) \
-         -I $(OBJDIR) \
-         -I $(SATSOLVERSOBJ) \
-         -I $(OCAML_DIR)
-
-include $(SATSOLVERSROOT)/Config.include
-
-MODULES=obj/basics.cmx \
-        obj/cfg.cmx \
-        obj/parser.cmx \
-        obj/lexer.cmx \
-        obj/coding.cmx \
-        obj/dotty.cmx \
-        obj/problems.cmx \
-        obj/engine.cmx
-
-SATSOLVERMODULES=$(SATSOLVERSOBJ)/satwrapper.cmx \
-                 $(SATSOLVERSOBJ)/satsolvers.cmx \
-                 $(SATSOLVERSOBJ)/pseudosatwrapper.cmx \
-                 $(SATSOLVERMODS)
-
-INTERFACES=$(MODULES:.cmx=.cmi)
-
-EXECUTABLE=$(BINDIR)/cfganalyzer
+#PDFLATEX=/usr/local/texlive/2018/bin/x86_64-darwin/pdflatex
 
 
-$(SOURCES:.ml=.cmx:src=obj)
+all: byte native
 
+#byte: version
+byte: 
+	$(OCAMLBUILD) $(PARAMS) $(SRC)/$(MAIN).byte
 
-all: satsolvers $(INTERFACES) $(MODULES) obj/main.cmx exec
-
-satsolvers:
-	make -C $(SATSOLVERSROOT)
-
-src/parser.ml: src/parser.mly
-	$(OCAMLYACC) src/parser.mly
-
-obj/parser.cmi: src/parser.mli
-	$(OCAMLOPT) $(INCLUDES) -c -o obj/parser.cmi src/parser.mli
-
-src/lexer.ml: src/lexer.mll
-	$(OCAMLLEX) src/lexer.mll
-
-exec:
-	$(OCAMLOPT) -o $(EXECUTABLE) -cc $(CPP) $(SATSOLVERMODULES) $(MODULES) obj/main.cmx
-
-obj/%.cmx: src/%.ml
-	$(OCAMLOPT) $(INCLUDES) -c -o $@ $<
-
-obj/%.cmi: src/%.mli
-	$(OCAMLOPT) $(INCLUDES) -c -o $@ $<
-
-#src/%.mli: src/%.ml
-#	$(OCAMLOPT) $(INCLUDES) -i $< > $@
-
-src/lexer.mli: src/lexer.ml
-	$(OCAMLOPT) $(INCLUDES) -i src/lexer.ml > src/lexer.mli
-
-src/parser.mli: src/parser.ml
-	$(OCAMLOPT) $(INCLUDES) -i src/parser.ml > src/parser.mli
-
-#src/basics.mli: src/basics.ml
-#	$(OCAMLOPT) $(INCLUDES) -i src/basics.ml > src/basics.mli
-
-obj/%.cmi: src/%.mli
-	$(OCAMLOPT) $(INCLUDES) -c -o $@ $<
+#native: version
+native: 
+	$(OCAMLBUILD) $(PARAMS) $(SRC)/$(MAIN).native
 
 clean:
-	rm -f obj/*.o obj/*.cmx obj/*.cmi
-	rm -f src/parser.ml src/parser.mli src/lexer.ml src/lexer.mli
-	rm -f $(EXECUTABLE)
+	$(OCAMLBUILD) -clean
 
-veryclean: clean
-	make -C $(SATSOLVERSROOT) clean
+#archive: version
+#	zip dimo.zip src/alschemes.ml src/basics.ml src/dimo.ml src/engine.ml src/enumerators.ml \
+#	src/lexer.mll src/parser.mly src/propFormula.ml src/version.ml \
+#	examples/exactlyMofN.dm examples/nQueens.dm Makefile _tags README
 
-depend:
-	$(OCAMLDEP) -native $(INCLUDES) src/*.mli src/*.ml | $(SED) "s/src/obj/g" > .depend
+#doc: version
+#	make -C doc
 
+#version:
+#	$(SED) "s/[0-9,\.]*/let version=\"&\"/" Version.txt > src/version.ml
+#	$(SED) "s/[0-9,\.]*/\\\newcommand\{\\\DiMoVersion\}\{&\}/" Version.txt > doc/version.tex
 
-include .depend

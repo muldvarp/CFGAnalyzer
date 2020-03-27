@@ -54,14 +54,14 @@ struct
                    ("-n",Unit(set_problem intersection),""); 
                    ("--intersection",Unit(set_problem intersection),"\n    checks whether the intersection of L(G1), L(G2), ... is empty\n    an example will be a word w in all of them"); 
                    ("-q",Unit(set_problem equivalence),""); 
-                   ("--equivalence",Unit(set_problem equivalence),"\n    checks whether the L(G1)=L(G2)\n    a counterexample will be a word w in one language but not the other"); 
+                   ("--equivalence",Unit(set_problem equivalence),"\n    checks whether L(G1)=L(G2)\n    a counterexample will be a word w in one language but not the other"); 
                    ("-a",Unit(set_problem ambiguity),""); 
                    ("--ambiguity",Unit(set_problem ambiguity),"\n    checks whether G1 is ambiguous\n    an example will be a word w in L(G1) which has two parse trees (use -o to have parse trees extracted)");
                    ("-o",String(Coding.Solver.set_solver),"");
                    ("--solver",String(Coding.Solver.set_solver),"<name>\n    sets <name> as the SAT solver, chose from " ^
                         (Coding.Solver.available_solvers ())) ]
 
-  let header = "CFG Analyzer, version 26/12/2012\n\n"
+  let header = "CFGAnalyzer, version 27/03/2020\n\n"
 end ;;
 
 open CommandLine ;;
