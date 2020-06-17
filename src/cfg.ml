@@ -488,10 +488,12 @@ let tidy cfg =
                         cfg))
   done;
 
-  if StringSet.mem start !productive then  
-    List.filter
-      (fun (n,_) -> StringSet.mem n !productive)
-      cfg
+  if StringSet.mem start !productive then
+    List.map (fun (n,prods) -> (n, List.filter (fun rule -> List.for_all (function Terminal _ -> true
+                                                                                 | Nonterminal b -> StringSet.mem b !productive)
+                                                              rule)
+                                                prods))
+             (List.filter (fun (n,_) -> StringSet.mem n !productive) cfg)
   else
     [ (start,[[Nonterminal start]]) ]
 
