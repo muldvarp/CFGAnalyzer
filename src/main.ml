@@ -61,7 +61,7 @@ struct
                    ("--solver",String(Coding.Solver.set_solver),"<name>\n    sets <name> as the SAT solver, chose from " ^
                         (Coding.Solver.available_solvers ())) ]
 
-  let header = "CFGAnalyzer, version 17/06/2020\n\n"
+  let header = "CFGAnalyzer, version 19/06/2020\n\n"
 end ;;
 
 open CommandLine ;;
