@@ -443,7 +443,7 @@ let tidy cfg =
           let rules = try
                         List.assoc v cfg
                       with
-                        Not_found -> failwith ("Cfg.tidy: nonterminal " ^ v ^ " seems to have no definition in its grammar.\n") 
+                        Not_found -> [] (* failwith ("Cfg.tidy: nonterminal " ^ v ^ " seems to have no definition in its grammar.\n") *) 
           in
           List.iter 
             (fun rule -> List.iter
