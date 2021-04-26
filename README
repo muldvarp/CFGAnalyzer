@@ -14,8 +14,8 @@ grammars (CFG).
 
 1) AUTHORSHIP
 -------------
-CFGAnalyzer was written by Martin Lange, University of Munich, 
-2007-2012. 
+CFGAnalyzer was written by Martin Lange, University of Kassel, 
+Germany, 2007-2021. 
 
 
 2) LICENSE
@@ -29,62 +29,68 @@ http://www.opensource.org/licenses/bsd-license.php .
 You will need the following to build a working copy
 of cfganalyzer.
 
-- The OCaml compiler. The code was written for version 3.09.2
-  but should also work with lower ones. It can be obtained from
-  http://www.ocaml.org
+- The OCaml compiler. The original code was written for version 3.09.2.
+  We recommend using a more recent version, at least 4.07.
 
-- At least one of the following SAT solvers
-  - ZChaff, http://www.princeton.edu/~chaff/zchaff.html
-  - MiniSat, http://www.minisat.se
-  - PicoSat, http://fmv.jku.at/picosat/
+- The OCaml packages ocaml-find, ocaml-build and ocaml-sat-solvers.
 
-- A C++ compiler like "g++". You must use the same in order to compile
-  the SAT solvers and the SAT solvers' interfaces packed with CFGAnalyzer.
+Both are best installed via the OCaml package manager opam:
+https://opam.ocaml.org/
 
 
 4) INSTALLATION
 ---------------
-First compile the SAT solver(s) according to the instructions that
-come with them.
+1. Download and install opam in the way that is recommended / available
+for your operating system. Follow the installation instructions 
+including the installation of an OCaml compiler via
 
-Copy the file "Config.default" that is included with cfganalyzer's 
-source code to "Config".
+> opam switch create 4.07.0
 
-Edit "Config" and set the paths to the required programs like the
-OCaml compiler, etc.
+for instance.
 
-Go into the subdirectory SATSolversForOCaml. Again, copy Config.default
-to Config and edit it setting the correct paths for the OCaml and the
-C++ compiler etc.
+2. Install the required packages.
 
-In this subdirectory, copy Solvers.default to Solvers and edit it.
-For every SAT solver that you have installed and would like to use 
-with CFGAnalyzer, set the values of the "WITH..."-variables to "YES"
-and give the correct path to the installation of the SAT solvers.
+> opam install ocaml-find ocaml-build ocaml-sat-solvers
 
-Then, in the main directory for CFGAnalyzer, execute
+3. Download CFGAnalyzer-master.zip via the "Code" button on 
+https://github.com/muldvarp/CFGAnalyzer, unpack it and change
+into the created directory.
 
-   make .depend
-   make
+> unzip CFGAnalyzer-master.zip
+> mv CFGAnalyzer-master CFGAnalyzer
+> cd CFGAnalyzer
 
-The executable `cfganalyzer' will reside in the subdirectory `bin'.
+4. Edit the file Makefile and check that the variables in the top
+section point to the right commands on your system.
 
-You can run `make clean' to remove all temporary files and `make
-veryclean' to also remove temporary files that handle the inclusion
-of the SAT solvers. Note that both also delete the executable "cfganalyzer" 
-in the subdirectory "bin".
+5. Compile CFGAnalyzer.
+
+> make
+
+This creates a native code executable of CFGAnalyzer called
+cfganalyzer in the current directory. If you prefer an OCaml byte 
+code executable (which will require the OCaml runtime environment 
+to run) use
+
+> make byte 
+
+instead.
+
+5. (optional) To clean up files produced during compilation run
+
+> make clean
 
 
 5) USAGE GUIDE
 --------------
-Type `bin/cfganalyzer --help' to see a list of command line switches
+Type `cfganalyzer --help' to see a list of command line switches
 and arguments understood by the program. In general it assumes the 
 input context-free grammars (CFG) to be given in files listed on the 
 command line. In each run, cfganalyzer can analyse the given CFGs
 w.r.t. one particular problem. This is specified by an argument again.
 For example,
 
-  bin/cfganalyzer -i <file1> <file2> -v 2 -c
+  cfganalyzer -i <file1> <file2> -v 2 -c
 
 will result in cfganalyzer to check whether the language of the CFG
 given in <file1> is included ("-i") in the language of the CFG given
